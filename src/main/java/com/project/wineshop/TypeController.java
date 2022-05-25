@@ -58,7 +58,7 @@ class TypeController {
     // Single item
 
     @GetMapping("/types/{id}")
-    EntityModel<Type> one(@PathVariable Long id) {
+    EntityModel<Type> one(@PathVariable Integer id) {
 
         Type type = repository.findById(id)
                 .orElseThrow(() -> new TypeNotFoundException(id));
@@ -66,7 +66,7 @@ class TypeController {
     }
 
     @PutMapping("/types/{id}")
-    ResponseEntity<?> replaceType(@RequestBody Type newType, @PathVariable Long id) {
+    ResponseEntity<?> replaceType(@RequestBody Type newType, @PathVariable Integer id) {
 
         Type updatedType = repository.findById(id) //
                 .map(type -> {
@@ -86,7 +86,7 @@ class TypeController {
     }
 
     @DeleteMapping("/types/{id}")
-    ResponseEntity<?> deleteType(@PathVariable Long id) {
+    ResponseEntity<?> deleteType(@PathVariable Integer id) {
 
         repository.deleteById(id);
 

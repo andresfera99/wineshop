@@ -9,10 +9,10 @@ import javax.persistence.Id;
 @Entity
 public class Type {
     private @Id
-    @GeneratedValue Long id;
+    @GeneratedValue Integer id;
     private String name;
 
-    Type() {
+    public Type() {
     }
 
     Type(String name) {
@@ -20,7 +20,7 @@ public class Type {
 
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -28,7 +28,7 @@ public class Type {
         return name;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

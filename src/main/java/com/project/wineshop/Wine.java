@@ -3,10 +3,7 @@ package com.project.wineshop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,15 +19,21 @@ public class Wine {
 
     private String body;
     private String acidity;
-    private int winery;
-    private int type;
+    @ManyToOne
+    @JoinColumn(name = "winery")
+    private Winery winery;
+    @ManyToOne
+    @JoinColumn(name = "type")
+    private Type type;
 
-    private int region;
+    @ManyToOne
+    @JoinColumn(name = "region")
+    private Region region;
 
-    Wine() {
+    public Wine() {
     }
 
-    public Wine(String name, String year, double price, float rating, int num_reviews, String body, String acidity, int winery, int type, int region) {
+    public Wine(String name, String year, double price, float rating, int num_reviews, String body, String acidity, Winery winery, Type type, Region region) {
         this.name = name;
         this.year = year;
         this.price = price;
@@ -75,41 +78,12 @@ public class Wine {
         return acidity;
     }
 
-    public Object getWinery() {
-
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.scan("com.project.wineshop");
-        context.refresh();
-
-        WineryRepository repository = context.getBean(WineryRepository.class);
-
-        Optional<Winery> winery = repository.findById(Long.valueOf(this.winery)); //se wrappea en un optional por si no existiese el primero
-        if (winery.isPresent()) {
-            return winery.get();
-        }
-        return null;
+    public Winery getWinery() {
+        return this.winery;
     }
 
-    public int getWineryId() {
-        return winery;
-    }
-
-    public Object getType() {
-
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.scan("com.project.wineshop");
-        context.refresh();
-
-        TypeRepository repository = context.getBean(TypeRepository.class);
-        Optional<Type> type = repository.findById(Long.valueOf(this.type)); //se wrappea en un optional por si no existiese el primero
-        if (type.isPresent()) {
-            return type.get();
-        }
-        return null;
-    }
-
-    public int getTypeId() {
-        return type;
+    public Type getType() {
+        return this.type;
     }
 
     public void setId(Long id) {
@@ -144,33 +118,19 @@ public class Wine {
         this.acidity = acidity;
     }
 
-    public void setWinery(int winery) {
+    public void setWinery(Winery winery) {
         this.winery = winery;
     }
 
-    public void setType(int type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
-    public int getRegionId() {
+    public Region getRegion() {
         return region;
     }
 
-    public Object getRegion() {
-
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.scan("com.project.wineshop");
-        context.refresh();
-
-        RegionRepository repository = context.getBean(RegionRepository.class);
-        Optional<Region> region = repository.findById(Long.valueOf(this.region)); //se wrappea en un optional por si no existiese el primero
-        if (region.isPresent()) {
-            return region.get();
-        }
-        return null;
-    }
-
-    public void setRegion(int region) {
+    public void setRegion(Region region) {
         this.region = region;
     }
 
