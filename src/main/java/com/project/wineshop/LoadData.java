@@ -17,32 +17,34 @@ import java.util.List;
 @Configuration //hace que se ejecute al iniciar la aplicacion
 class LoadData {
 
-    private static final Logger log = LoggerFactory.getLogger(LoadData.class);
+
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    private static final Logger log = LoggerFactory.getLogger(LoadData.class);
 
     @Bean
     CommandLineRunner initDatabase(WineRepository wineRepository, WineryRepository wineryRepository, TypeRepository typeRepository, RegionRepository regionRepository) {
 
         return args -> {
 
-            RowCallbackHandler callback = new RowCallbackHandler() {
+            /*RowCallbackHandler callback = new RowCallbackHandler() {
                 @Override
                 public void processRow(ResultSet rs) throws SQLException {
                     typeRepository.save(new Type(rs.getString("type")));
                 }
             };
-            jdbcTemplate.query("Select distinct type from wines_spa", callback);
+            jdbcTemplate.query("Select distinct type from wines_spa", callback);*/
 
-            RowCallbackHandler callback2 = new RowCallbackHandler() {
+           /* RowCallbackHandler callback2 = new RowCallbackHandler() {
                 @Override
                 public void processRow(ResultSet rs) throws SQLException {
                     wineryRepository.save(new Winery(rs.getString("winery")));
                 }
             };
-            jdbcTemplate.query("Select distinct winery from wines_spa", callback2);
+            jdbcTemplate.query("Select distinct winery from wines_spa", callback2);*/
 
-            RowCallbackHandler callback3 = new RowCallbackHandler() {
+            /*RowCallbackHandler callback3 = new RowCallbackHandler() {
                 @Override
                 public void processRow(ResultSet rs) throws SQLException {
                     regionRepository.save(
@@ -53,39 +55,33 @@ class LoadData {
                     );
                 }
             };
-            jdbcTemplate.query("Select distinct region, country from wines_spa", callback3);
-
-            RowCallbackHandler callback4 = new RowCallbackHandler() {
+            jdbcTemplate.query("Select distinct region, country from wines_spa", callback3);*/
+            /*RowCallbackHandler callback4 = new RowCallbackHandler() {
                 @Override
                 public void processRow(ResultSet rs) throws SQLException {
-                    /*this.name = name;
-                    this.year = year;
-                    this.price = price;
-                    this.rating = rating;
-                    this.body = body;
-                    this.acidity = acidity;
-                    this.winery = winery;
-                    this.type = type;
-                    this.region = region;*/
+                    Winery winery = wineryRepository.findByName(rs.getString("winery"));
+                    Type type = typeRepository.findByName(rs.getString("type"));
+                    Region region = regionRepository.findByName(rs.getString("region"));
+
                     wineRepository.save(
                             new Wine(
                                     rs.getString("wine"),
-                                    rs.getInt("year"),
+                                    rs.getString("year"),
                                     rs.getDouble("price"),
                                     rs.getFloat("rating"),
                                     rs.getInt("num_reviews"),
-                                    rs.getInt("body"),
-                                    rs.getInt("acidity"),
-                                    rs.getInt("winery"),
-                                    rs.getInt("type"),
-                                    rs.getInt("region")
+                                    rs.getString("body"),
+                                    rs.getString("acidity"),
+                                    Math.toIntExact(winery.getId()),
+                                    Math.toIntExact(type.getId()),
+                                    Math.toIntExact(region.getId())
 
                             )
                     );
                 }
             };
-            jdbcTemplate.query("Select * from wines_spa", callback4);
-
+            jdbcTemplate.query("Select * from wines_spa", callback4);*/
+            log.info("Preload complete");
         };
     }
 }

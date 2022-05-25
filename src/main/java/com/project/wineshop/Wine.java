@@ -10,13 +10,13 @@ public class Wine {
     private @Id
     @GeneratedValue Long id;
     private String name;
-    private int year;
+    private String year;
     private double price;
     private float rating;
     private int num_reviews;
 
-    private int body;
-    private int acidity;
+    private String body;
+    private String acidity;
     private int winery;
     private int type;
 
@@ -25,7 +25,7 @@ public class Wine {
     Wine() {
     }
 
-    public Wine(String name, int year, double price, float rating, int num_reviews, int body, int acidity, int winery, int type, int region) {
+    public Wine(String name, String year, double price, float rating, int num_reviews, String body, String acidity, int winery, int type, int region) {
         this.name = name;
         this.year = year;
         this.price = price;
@@ -46,7 +46,7 @@ public class Wine {
         return name;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
@@ -62,11 +62,11 @@ public class Wine {
         return num_reviews;
     }
 
-    public int getBody() {
+    public String getBody() {
         return body;
     }
 
-    public int getAcidity() {
+    public String getAcidity() {
         return acidity;
     }
 
@@ -86,7 +86,7 @@ public class Wine {
         this.name = name;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
@@ -102,11 +102,11 @@ public class Wine {
         this.num_reviews = num_reviews;
     }
 
-    public void setBody(int body) {
+    public void setBody(String body) {
         this.body = body;
     }
 
-    public void setAcidity(int acidity) {
+    public void setAcidity(String acidity) {
         this.acidity = acidity;
     }
 
@@ -131,7 +131,7 @@ public class Wine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Wine wine = (Wine) o;
-        return year == wine.year && Double.compare(wine.price, price) == 0 && Float.compare(wine.rating, rating) == 0 && num_reviews == wine.num_reviews && body == wine.body && acidity == wine.acidity && winery == wine.winery && type == wine.type && region == wine.region && id.equals(wine.id) && name.equals(wine.name);
+        return Double.compare(wine.price, price) == 0 && Float.compare(wine.rating, rating) == 0 && num_reviews == wine.num_reviews && winery == wine.winery && type == wine.type && region == wine.region && id.equals(wine.id) && name.equals(wine.name) && Objects.equals(year, wine.year) && Objects.equals(body, wine.body) && Objects.equals(acidity, wine.acidity);
     }
 
     @Override
