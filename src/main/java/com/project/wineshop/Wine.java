@@ -1,9 +1,14 @@
 package com.project.wineshop;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 public class Wine {
@@ -70,11 +75,40 @@ public class Wine {
         return acidity;
     }
 
-    public int getWinery() {
+    public Object getWinery() {
+
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.scan("com.project.wineshop");
+        context.refresh();
+
+        WineryRepository repository = context.getBean(WineryRepository.class);
+
+        Optional<Winery> winery = repository.findById(Long.valueOf(this.winery)); //se wrappea en un optional por si no existiese el primero
+        if (winery.isPresent()) {
+            return winery.get();
+        }
+        return null;
+    }
+
+    public int getWineryId() {
         return winery;
     }
 
-    public int getType() {
+    public Object getType() {
+
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.scan("com.project.wineshop");
+        context.refresh();
+
+        TypeRepository repository = context.getBean(TypeRepository.class);
+        Optional<Type> type = repository.findById(Long.valueOf(this.type)); //se wrappea en un optional por si no existiese el primero
+        if (type.isPresent()) {
+            return type.get();
+        }
+        return null;
+    }
+
+    public int getTypeId() {
         return type;
     }
 
@@ -118,8 +152,22 @@ public class Wine {
         this.type = type;
     }
 
-    public int getRegion() {
+    public int getRegionId() {
         return region;
+    }
+
+    public Object getRegion() {
+
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.scan("com.project.wineshop");
+        context.refresh();
+
+        RegionRepository repository = context.getBean(RegionRepository.class);
+        Optional<Region> region = repository.findById(Long.valueOf(this.region)); //se wrappea en un optional por si no existiese el primero
+        if (region.isPresent()) {
+            return region.get();
+        }
+        return null;
     }
 
     public void setRegion(int region) {
