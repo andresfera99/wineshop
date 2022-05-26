@@ -87,7 +87,7 @@ class TypeController {
 
     @DeleteMapping("/types/{id}")
     ResponseEntity<?> deleteType(@PathVariable Integer id) {
-
+        Type type = repository.findById(id).orElseThrow(() -> new TypeNotFoundException(id));
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();

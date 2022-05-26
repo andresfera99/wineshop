@@ -83,6 +83,7 @@ class RegionController {
     @DeleteMapping("/regions/{id}")
     ResponseEntity<?> deleteRegion(@PathVariable Long id) {
 
+        Region region = repository.findById(id).orElseThrow(() -> new RegionNotFoundException(id));
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();

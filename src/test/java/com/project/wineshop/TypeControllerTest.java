@@ -33,6 +33,91 @@ class TypeControllerTest {
     }
 
     @Test
+    void mostrarTodosOk() {
+        webTestClient.get()
+                .uri("/types")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void mostrarTodosHalJson() {
+        webTestClient.get()
+                .uri("/types")
+                .exchange()
+                .expectHeader().valueEquals("Content-Type", "application/hal+json");
+    }
+
+    @Test
+    void getOne() {
+        webTestClient.get()
+                .uri("/types/1")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void oneCheckId() {
+        webTestClient.get()
+                .uri("/types/1")
+                .exchange()
+                .expectBody()
+                .jsonPath("$.id").isEqualTo(1);
+    }
+
+    @Test
+    void getOneCheckName() {
+        webTestClient.get()
+                .uri("/types/1")
+                .exchange()
+                .expectBody()
+                .jsonPath("$.name").isEqualTo("tipo h2 prueba");
+    }
+
+    @Test
+    void getNonExistentStatus() {
+        webTestClient.get()
+                .uri("/types/65")
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void getNonExistentOne() {
+        webTestClient.get()
+                .uri("/types/65")
+                .exchange()
+                .expectBody(String.class).isEqualTo("Could not find type 65");
+    }
+
+    @Test
+    void getWrongDatatypetOne() {
+        webTestClient.get()
+                .uri("/types/Poteitos")
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void deleteNonExistent() {
+        webTestClient.delete()
+                .uri("/types/404")
+                .exchange()
+                .expectStatus().isNotFound();
+        repository.findAll().forEach(x -> System.out.println(x.toString()));
+    }
+
+    @Test
+    void deleteOne() {
+        webTestClient.delete()
+                .uri("/types/2")
+                .exchange()
+                .expectStatus().isNoContent();
+        repository.findAll().forEach(x -> System.out.println(x.toString()));
+
+    }
+
+    @Test
     void all() {
         webTestClient.get()
                 .uri("/types")
@@ -70,7 +155,7 @@ class TypeControllerTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(7)
+                .jsonPath("$.id").isEqualTo(11)
                 .jsonPath("$.name").isEqualTo("tipo test");
     }
 
@@ -84,7 +169,7 @@ class TypeControllerTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(8); // si se lanza por separado es 7
+                .jsonPath("$.id").isEqualTo(12); // si se lanza por separado es 7
         //.jsonPath("$.name").isEqualTo("tipo test");
     }
 

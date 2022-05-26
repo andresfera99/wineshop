@@ -81,7 +81,7 @@ class WineryController {
 
     @DeleteMapping("/wineries/{id}")
     ResponseEntity<?> deleteWinery(@PathVariable Long id) {
-
+        Winery winery = repository.findById(id).orElseThrow(() -> new WineryNotFoundException(id));
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();

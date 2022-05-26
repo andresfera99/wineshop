@@ -90,7 +90,7 @@ class WineController {
 
     @DeleteMapping("/wines/{id}")
     ResponseEntity<?> deleteWine(@PathVariable Long id) {
-
+        Wine wine = repository.findById(id).orElseThrow(() -> new RegionNotFoundException(id));
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();
