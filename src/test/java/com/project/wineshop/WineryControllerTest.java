@@ -47,7 +47,7 @@ class WineryControllerTest {
     @Test
     void getOne() {
         webTestClient.get()
-                .uri("/wineries/3")
+                .uri("/wineries/5")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -55,16 +55,16 @@ class WineryControllerTest {
     @Test
     void oneCheckId() {
         webTestClient.get()
-                .uri("/wineries/3")
+                .uri("/wineries/5")
                 .exchange()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(3);
+                .jsonPath("$.id").isEqualTo(5);
     }
 
     @Test
     void getOneCheckName() {
         webTestClient.get()
-                .uri("/wineries/3")
+                .uri("/wineries/5")
                 .exchange()
                 .expectBody()
                 .jsonPath("$.name").isEqualTo("vineria tupac");
@@ -106,7 +106,7 @@ class WineryControllerTest {
     @Test
     void deleteOne() {
         webTestClient.delete()
-                .uri("/wineries/4")
+                .uri("/wineries/6")
                 .exchange()
                 .expectStatus().isNoContent();
         repository.findAll().forEach(x -> System.out.println(x.toString()));
@@ -126,7 +126,7 @@ class WineryControllerTest {
 
     @Test
     void one() {
-        int id = 3;
+        int id = 5;
         Optional<Winery> tipo = repository.findById((long) id);
         String name = "";
         if (tipo.isPresent()) {
@@ -151,7 +151,7 @@ class WineryControllerTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(15)
+                .jsonPath("$.id").isEqualTo(28)
                 .jsonPath("$.name").isEqualTo("tipo test");
     }
 
@@ -165,7 +165,7 @@ class WineryControllerTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(16);
+                .jsonPath("$.id").isEqualTo(29);
         //.jsonPath("$.name").isEqualTo("tipo test");
     }
 
@@ -187,7 +187,7 @@ class WineryControllerTest {
 
     @Test
     void update() {
-        int id = 3;
+        int id = 5;
         String name = "asdiaasdiiuahsfagfiu";
         Winery a = new Winery(name);
         webTestClient.put()

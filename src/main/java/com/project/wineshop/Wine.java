@@ -12,6 +12,8 @@ public class Wine {
     private @Id
     @GeneratedValue Long id;
     private String name;
+
+    @Column(name = "`year`")
     private String year;
     private double price;
     private float rating;
@@ -23,7 +25,7 @@ public class Wine {
     @JoinColumn(name = "winery")
     private Winery winery;
     @ManyToOne
-    @JoinColumn(name = "type")
+    @JoinColumn(name = "`type`")
     private Type type;
 
     @ManyToOne

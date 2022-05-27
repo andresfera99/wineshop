@@ -12,16 +12,39 @@ import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-class RegionControllerTest {
+class WineControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
-    private RegionRepository repository;
+    private WineRepository repository;
+    @Autowired
+    private TypeRepository typeRepository;
+    @Autowired
+    private WineryRepository wineryRepository;
+    @Autowired
+    private RegionRepository regionRepository;
+
+    private Winery auxWinery;
+    private Type auxType;
+    private Region auxRegion;
 
     @BeforeEach
     void setUp() {
+        Optional<Winery> a = wineryRepository.findById(Long.valueOf(8));
+        if (a.isPresent()) {
+            auxWinery = a.get();
+        }
+        Optional<Type> b = typeRepository.findById(4);
+        if (b.isPresent()) {
+            auxType = b.get();
+        }
+
+        Optional<Region> c = regionRepository.findById(12L);
+        if (c.isPresent()) {
+            auxRegion = c.get();
+        }
     }
 
     @AfterEach
@@ -31,7 +54,7 @@ class RegionControllerTest {
     @Test
     void mostrarTodosOk() {
         webTestClient.get()
-                .uri("/regions")
+                .uri("/wines")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -39,7 +62,7 @@ class RegionControllerTest {
     @Test
     void mostrarTodosHalJson() {
         webTestClient.get()
-                .uri("/regions")
+                .uri("/wines")
                 .exchange()
                 .expectHeader().valueEquals("Content-Type", "application/hal+json");
     }
@@ -47,7 +70,7 @@ class RegionControllerTest {
     @Test
     void getOne() {
         webTestClient.get()
-                .uri("/regions/9")
+                .uri("/wines/13")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -55,25 +78,25 @@ class RegionControllerTest {
     @Test
     void oneCheckId() {
         webTestClient.get()
-                .uri("/regions/9")
+                .uri("/wines/13")
                 .exchange()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(9);
+                .jsonPath("$.id").isEqualTo(13);
     }
 
     @Test
     void getOneCheckName() {
         webTestClient.get()
-                .uri("/regions/9")
+                .uri("/wines/13")
                 .exchange()
                 .expectBody()
-                .jsonPath("$.name").isEqualTo("tierra media");
+                .jsonPath("$.name").isEqualTo("vino1");
     }
 
     @Test
     void getNonExistentStatus() {
         webTestClient.get()
-                .uri("/regions/65")
+                .uri("/wines/65")
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -81,15 +104,15 @@ class RegionControllerTest {
     @Test
     void getNonExistentOne() {
         webTestClient.get()
-                .uri("/regions/65")
+                .uri("/wines/65")
                 .exchange()
-                .expectBody(String.class).isEqualTo("Could not find region 65");
+                .expectBody(String.class).isEqualTo("Could not find wine 65");
     }
 
     @Test
     void getWrongDatatypetOne() {
         webTestClient.get()
-                .uri("/regions/Poteitos")
+                .uri("/wines/Poteitos")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -97,7 +120,7 @@ class RegionControllerTest {
     @Test
     void deleteNonExistent() {
         webTestClient.delete()
-                .uri("/regions/404")
+                .uri("/wines/404")
                 .exchange()
                 .expectStatus().isNotFound();
         repository.findAll().forEach(x -> System.out.println(x.toString()));
@@ -106,7 +129,7 @@ class RegionControllerTest {
     @Test
     void deleteOne() {
         webTestClient.delete()
-                .uri("/regions/10")
+                .uri("/wines/14")
                 .exchange()
                 .expectStatus().isNoContent();
         repository.findAll().forEach(x -> System.out.println(x.toString()));
@@ -116,7 +139,7 @@ class RegionControllerTest {
     @Test
     void all() {
         webTestClient.get()
-                .uri("/regions")
+                .uri("/wines")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals("Content-Type", "application/hal+json")
@@ -126,14 +149,14 @@ class RegionControllerTest {
 
     @Test
     void one() {
-        int id = 9;
-        Optional<Region> tipo = repository.findById(Long.valueOf(id));
+        int id = 13;
+        Optional<Wine> tipo = repository.findById((long) id);
         String name = "";
         if (tipo.isPresent()) {
             name = tipo.get().getName();
         }
         webTestClient.get()
-                .uri("/regions/" + id)
+                .uri("/wines/" + id)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals("Content-Type", "application/hal+json")
@@ -143,39 +166,39 @@ class RegionControllerTest {
 
     @Test
     void add() {
-        Region t = new Region("region test", "Espana");
+        Wine t = new Wine("vino test", "2305", 3215.21, 52.1f, 2, "2", "96", auxWinery, auxType, auxRegion);
         webTestClient.post()
-                .uri("/regions")
+                .uri("/wines")
                 .bodyValue(t)
                 .exchange()
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(16)
-                .jsonPath("$.name").isEqualTo("region test");
+                .jsonPath("$.id").isEqualTo(24)
+                .jsonPath("$.name").isEqualTo("vino test");
     }
 
     @Test
     void addInjection() {
-        Region t = new Region("region test'},{id: 8,name:'ijeccion test", "Espana");
+        Wine t = new Wine("vino test'},{id: 8,name:'ijeccion test\"", "2305", 3215.21, 52.1f, 2, "2", "96", auxWinery, auxType, auxRegion);
         webTestClient.post()
-                .uri("/regions")
+                .uri("/wines")
                 .bodyValue(t)
                 .exchange()
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(17); // si se lanza por separado es 7
-        //.jsonPath("$.name").isEqualTo("region test");
+                .jsonPath("$.id").isEqualTo(25);
+        //.jsonPath("$.name").isEqualTo("tipo test");
     }
 
     @Test
     void addNombreVacio() {
         String name = null;
-        Region a = new Region(name, "Espana");
+        Wine t = new Wine(name, "2305", 3215.21, 52.1f, 2, "2", "96", auxWinery, auxType, auxRegion);
         webTestClient.post()
-                .uri("/regions")
-                .bodyValue(a)
+                .uri("/wines")
+                .bodyValue(t)
                 .exchange()
                 .expectStatus()
                 .isCreated()
@@ -187,12 +210,12 @@ class RegionControllerTest {
 
     @Test
     void update() {
-        int id = 9;
+        int id = 13;
         String name = "asdiaasdiiuahsfagfiu";
-        Region a = new Region(name, "Espana");
+        Wine t = new Wine(name, "2305", 3215.21, 52.1f, 2, "2", "96", auxWinery, auxType, auxRegion);
         webTestClient.put()
-                .uri("/regions/" + id)
-                .bodyValue(a)
+                .uri("/wines/" + id)
+                .bodyValue(t)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().valueEquals("Content-Type", "application/hal+json")
@@ -205,10 +228,10 @@ class RegionControllerTest {
     void updateIdIncorrecto() {
         String id = "asd";
         String name = "asdiaasdiiuahsfagfiu";
-        Region a = new Region(name, "Espana");
+        Wine t = new Wine(name, "2305", 3215.21, 52.1f, 2, "2", "96", auxWinery, auxType, auxRegion);
         webTestClient.put()
-                .uri("/regions/" + id)
-                .bodyValue(a)
+                .uri("/wines/" + id)
+                .bodyValue(t)
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -217,10 +240,10 @@ class RegionControllerTest {
     void updateIdNoExistente() {
         int id = 65;
         String name = "asdiaasdiiuahsfagfiu";
-        Region a = new Region(name, "Espana");
+        Wine t = new Wine(name, "2305", 3215.21, 52.1f, 2, "2", "96", auxWinery, auxType, auxRegion);
         webTestClient.put()
-                .uri("/regions/" + id)
-                .bodyValue(a)
+                .uri("/wines/" + id)
+                .bodyValue(t)
                 .exchange()
                 .expectStatus()
                 .isCreated()

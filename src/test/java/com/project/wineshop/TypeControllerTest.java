@@ -155,7 +155,7 @@ class TypeControllerTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(11)
+                .jsonPath("$.id").isEqualTo(20)
                 .jsonPath("$.name").isEqualTo("tipo test");
     }
 
@@ -169,7 +169,7 @@ class TypeControllerTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(12); // si se lanza por separado es 7
+                .jsonPath("$.id").isEqualTo(21); // si se lanza por separado es 7
         //.jsonPath("$.name").isEqualTo("tipo test");
     }
 
