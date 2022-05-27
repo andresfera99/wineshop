@@ -81,7 +81,7 @@ class LoadData {
                 }
             };
             jdbcTemplate.query("Select * from wines_spa", callback4);*/
-            Type aux1 = new Type("tipo h2 prueba");
+            /*Type aux1 = new Type("tipo h2 prueba");
             typeRepository.save(aux1);
 
             typeRepository.save(new Type("tipo h2 prueba 2"));
@@ -125,7 +125,7 @@ class LoadData {
             });
             wineRepository.findAll().forEach(t -> {
                 log.info(t.toString());
-            });
+            });*/
 
             log.info("Preload complete");
         };
